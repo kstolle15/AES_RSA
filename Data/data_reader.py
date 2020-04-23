@@ -4,7 +4,7 @@
 def readFirstTen():
     phrases = []
     try:
-        f = open("firstTen.txt", "r")
+        f = open("ten.txt", "r")
         lines = f.readlines()
         for line in lines:
             line = line.strip()

@@ -12,7 +12,7 @@ def writeFirstTen():
     phrases = []
     phrases = getPhrases(10,phrases)
     try:
-        f = open("firstTen.txt", "w")
+        f = open("ten.txt", "w")
         for i in phrases:
             f.write(i)
             f.write("\n")
