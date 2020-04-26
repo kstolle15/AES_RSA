@@ -11,7 +11,7 @@ def writeFirstTen():
     phrases = []
     phrases = getPhrases(10,phrases)
     try:
-        f = open("ten.txt", "w")
+        f = open("../Data/ten.txt", "w")
         for i in phrases:
             f.write(i)
             f.write("\n")
@@ -26,7 +26,7 @@ def writeHundred():
     phrases = []
     phrases = getPhrases(100,phrases)
     try:
-        f = open("hundred.txt", "w")
+        f = open("../Data/hundred.txt", "w")
         for i in phrases:
             f.write(i)
             f.write("\n")
@@ -41,7 +41,7 @@ def writeThousand():
     phrases = []
     phrases = getPhrases(1000,phrases)
     try:
-        f = open("thousand.txt", "w")
+        f = open("../Data/thousand.txt", "w")
         for i in phrases:
             f.write(i)
             f.write("\n")
@@ -56,7 +56,7 @@ def writeHundredThousand():
     phrases = []
     phrases = getPhrases(100000,phrases)
     try:
-        f = open("hundredThousand.txt", "w")
+        f = open("../Data/hundredThousand.txt", "w")
         for i in phrases:
             f.write(i)
             f.write("\n")
@@ -71,7 +71,7 @@ def writeMillion():
     phrases = []
     phrases = getPhrases(1000000,phrases)
     try:
-        f = open("million.txt", "w")
+        f = open("../Data/million.txt", "w")
         for i in phrases:
             f.write(i)
             f.write("\n")
