@@ -3,6 +3,7 @@
 
 from Crypto.Cipher import AES
 from Crypto.Util import Padding
+import data_reader
 
 class aes:
     def __init__(self):
@@ -25,3 +26,11 @@ class aes:
     def encrypt(plaintext):
         enc = AES.new(self.key,AES.MODE_CBC,self.iv)
         return enc.encrypt(plaintext.encode())
+
+    def decrypt(ciphertext):
+        dec = AES.new(self.key,AES.MODE_CBC,self.iv)
+        return dec.decrypt(ciphertext)
+
+
+
+
