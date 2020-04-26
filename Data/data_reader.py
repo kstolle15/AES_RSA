@@ -1,10 +1,10 @@
 # Kyle Stolle - CSCE 463 Final Project: AES vs RSA 04/23/2020
 # This program will be used to read test data for the AES and RSA algorithms
 
-def readFirstTen():
+def readFile(file):
     phrases = []
     try:
-        f = open("ten.txt", "r")
+        f = open(file, "r")
         lines = f.readlines()
         for line in lines:
             line = line.strip()
