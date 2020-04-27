@@ -69,9 +69,24 @@ def writeTwoThousand():
 
 def writeThreeThousand():
     phrases = []
-    phrases = getPhrases(1000000,phrases)
+    phrases = getPhrases(3000,phrases)
     try:
         f = open("../Data/threeThousand.txt", "w")
+        for i in phrases:
+            f.write(i)
+            f.write("\n")
+    except IOError:
+        print("An error occured trying to write to the file,")
+    except:
+        print("A non file related error occured.")
+    finally:
+        f.close()
+
+def writeFiveThousand():
+    phrases = []
+    phrases = getPhrases(5000,phrases)
+    try:
+        f = open("../Data/fiveThousand.txt", "w")
         for i in phrases:
             f.write(i)
             f.write("\n")
@@ -93,8 +108,4 @@ def getPhrases(num,phrases):
     return phrases
 
 
-writeFirstTen()
-writeHundred()
-writeThousand()
-writeTwoThousand()
-writeThreeThousand()
+writeFiveThousand()
