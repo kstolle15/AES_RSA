@@ -52,11 +52,11 @@ def writeThousand():
     finally:
         f.close()
 
-def writeHundredThousand():
+def writeTwoThousand():
     phrases = []
-    phrases = getPhrases(100000,phrases)
+    phrases = getPhrases(2000,phrases)
     try:
-        f = open("../Data/hundredThousand.txt", "w")
+        f = open("../Data/twoThousand.txt", "w")
         for i in phrases:
             f.write(i)
             f.write("\n")
@@ -67,11 +67,11 @@ def writeHundredThousand():
     finally:
         f.close()
 
-def writeMillion():
+def writeThreeThousand():
     phrases = []
     phrases = getPhrases(1000000,phrases)
     try:
-        f = open("../Data/million.txt", "w")
+        f = open("../Data/threeThousand.txt", "w")
         for i in phrases:
             f.write(i)
             f.write("\n")
@@ -96,3 +96,5 @@ def getPhrases(num,phrases):
 writeFirstTen()
 writeHundred()
 writeThousand()
+writeTwoThousand()
+writeThreeThousand()
