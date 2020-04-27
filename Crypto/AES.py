@@ -36,16 +36,9 @@ class aes:
 def runTest():
     import data_reader as dr
     crypt = aes()
-    tenPhrases = dr.readFile("../Data/ten.txt")
-    hundredPhrases = dr.readFile("../Data/hundred.txt")
-    thousandPhrases = dr.readFile("../Data/thousand.txt")
-    hundredThousandPhrases = dr.readFile("../Data/hundredThousand.txt")
-    if(testNum(tenPhrases,crypt)):
-        print("Encryption and Decryption successful for 10 phrases.")
-    if(testNum(hundredPhrases,crypt)):
-        print("Encryption and Decryption successful for 100 phrases.")
-    if(testNum(thousandPhrases,crypt)):
-        print("Encryption and Decryption successful for 1000 phrases.")
+    fiveThousand = dr.readFile("../Data/fiveThousand.txt")
+    if(testNum(fiveThousand,crypt)):
+        print("Encryption and Decryption Successful for 5000 Phrases.")
     
 
 def testNum(phrases,c):
