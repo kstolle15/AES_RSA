@@ -118,4 +118,4 @@ def getPhrases(num,phrases):
 write117bytes()
 write245bytes()
 write468bytes()
-#writeFiveThousand()
+writeFiveThousand()
