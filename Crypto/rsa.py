@@ -3,6 +3,7 @@
 
 from Crypto.Cipher import PKCS1_OAEP
 from Crypto.PublicKey import RSA
+import sys
 
 def getPubKey4096():
     pub_key = ""
@@ -83,6 +84,7 @@ def runTest():
         print("Encryption and Decryption Successful for 117,245, and 468 length messages")
     else: 
         print("Encryption and Decryption Failed for 117,245, and 468 length messages")
+    
 
 def largerTest():
     import data_reader as dr 
@@ -101,11 +103,14 @@ def largerTest():
     c2 = encryptPhrases(two,pkTwo)
     c4 = encryptPhrases(four,pkFour)
 
-    r1 = decryptPhrases(one,skOne)
-    r2 = decryptPhrases(two,skTwo)
-    r4 = decryptPhrases(four,skFour)
+    r1 = decryptPhrases(c1,skOne)
+    r2 = decryptPhrases(c2,skTwo)
+    r4 = decryptPhrases(c4,skFour)
 
     if(checkEquality(one,r1) and checkEquality(two,r2) and checkEquality(four,r4)):
+        print(r1[3],one[3])
+        print(r2[3],two[3])
+        print(r4[3],four[3])
         return True
     else:
         return False
@@ -123,7 +128,7 @@ def encryptPhrases(phrases,key):
     cipher = []
     e = PKCS1_OAEP.new(key)
     for line in phrases:
-        ciphertext = e.encrypt(line.encode(encoding="UTF-8",errors='strict'))
+        ciphertext = e.encrypt(line)
         cipher.append(ciphertext)
     return cipher
 
@@ -132,8 +137,8 @@ def decryptPhrases(phrases,key):
     d = PKCS1_OAEP.new(key)
     for line in phrases:
         recoveredtext = d.decrypt(line)
-        recoveredtext = recoveredtext.decode(encoding='UTF-8',errors='strict')
         recover.append(recoveredtext)
+    
     return recover
 
 def runBasicTest():
@@ -144,13 +149,12 @@ def runBasicTest():
     pkey1 = getPubKey1024()
     skey1 = getSecretKey1024()
     # testing encrypting a message 
-    message = "Hello Kyle"
+    message = b"Hello Kyle"
     e = PKCS1_OAEP.new(pkey1)
     d = PKCS1_OAEP.new(skey1)
-    ciphertext = e.encrypt(message.encode(encoding='UTF-8',errors='strict'))
+    ciphertext = e.encrypt(message)
     #testing decrypting the message
     recoveredtext = d.decrypt(ciphertext)
-    recoveredtext = recoveredtext.decode(encoding='UTF-8',errors='strict')
     print(message)
     print(ciphertext)
     print(recoveredtext)

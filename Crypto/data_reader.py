@@ -8,7 +8,8 @@ def readFile(file):
         lines = f.readlines()
         for line in lines:
             line = line.strip()
-            phrases.append(line)
+            byte = bytes(line,'utf-8')
+            phrases.append(byte)
     except IOError:
         print("An error occured trying to read the file,")
     except:

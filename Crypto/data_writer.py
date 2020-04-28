@@ -1,5 +1,12 @@
 # Kyle Stolle - CSCE 463 Final Project: AES vs RSA 04/21/2020
 # This program will be used to create test data for the AES and RSA algorithms
+"""
+NOTE: 
+117 = max string length for encryption with 1024-bit RSA key
+245 = max string length for encryption with 2048-bit RSA key
+468 = max string length for encryption with 4096-bit RSA key
+
+""" 
 
 import os 
 import string
@@ -24,7 +31,7 @@ def writeFirstTen():
 
 def write117():
     phrases = []
-    phrases = getPhrases(86,phrases)
+    phrases = getPhrases(117,phrases) # 86 length strings are 117 bytes after encoding
     try:
         f = open("../Data/117.txt", "w")
         for i in phrases:

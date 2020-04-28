@@ -48,6 +48,7 @@ def testNum(phrases,c):
     recoveredPhrases = decryptPhrases(cipherPhrases,c)
     # test for equality 
     if(checkEquality(phrases,recoveredPhrases)):
+        print(phrases[3],cipherPhrases[3],recoveredPhrases[3])
         return True
     else:
         return False
@@ -55,7 +56,6 @@ def testNum(phrases,c):
 def encryptPhrases(phrases,c):
     encryptedPhrases = []
     for phrase in phrases:
-        phrase = phrase.encode(encoding='UTF-8',errors='strict')
         plaintext = pad(phrase,16)
         ciphertext = c.encrypt(plaintext)
         encryptedPhrases.append(ciphertext)
@@ -67,7 +67,6 @@ def decryptPhrases(phrases,c):
     for line in phrases:
         recoveredText = c.decrypt(line)
         recoveredText = unpad(recoveredText,16)
-        recoveredText = recoveredText.decode('UTF-8',errors='strict')
         decryptedPhrases.append(recoveredText)
 
     return decryptedPhrases 
