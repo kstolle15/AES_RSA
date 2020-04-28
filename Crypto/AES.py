@@ -79,9 +79,7 @@ def checkEquality(plain,recovered):
             return False
         i = i + 1
     return True
-    
 
-runTest()
 
     
 

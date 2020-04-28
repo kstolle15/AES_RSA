@@ -158,6 +158,3 @@ def runBasicTest():
     print(message)
     print(ciphertext)
     print(recoveredtext)
-
-
-runTest()
