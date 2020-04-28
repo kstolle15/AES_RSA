@@ -29,9 +29,9 @@ def writeFirstTen():
     finally:
         f.close()
 
-def write117():
+def write117bytes():
     phrases = []
-    phrases = getPhrases(117,phrases) # 86 length strings are 117 bytes after encoding
+    phrases = getPhrases(86,phrases) # 86 length strings are 117 bytes after encoding
     try:
         f = open("../Data/117.txt", "w")
         for i in phrases:
@@ -44,9 +44,9 @@ def write117():
     finally:
         f.close()
 
-def write245():
+def write245bytes():
     phrases = []
-    phrases = getPhrases(245,phrases)
+    phrases = getPhrases(214,phrases) # 214 length strings are 245 bytes after encoding
     try:
         f = open("../Data/245.txt", "w")
         for i in phrases:
@@ -59,9 +59,9 @@ def write245():
     finally:
         f.close()
 
-def write468():
+def write468bytes():
     phrases = []
-    phrases = getPhrases(468,phrases)
+    phrases = getPhrases(470,phrases) # 470 length strings are 468 bytes after encoding
     try:
         f = open("../Data/468.txt", "w")
         for i in phrases:
@@ -115,7 +115,7 @@ def getPhrases(num,phrases):
     return phrases
 
 
-write117()
-write245()
-write468()
-writeFiveThousand()
+write117bytes()
+write245bytes()
+write468bytes()
+#writeFiveThousand()
