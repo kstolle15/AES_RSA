@@ -18,6 +18,41 @@ def runAES(small,med,large,five):
     # five thousand
     aesFiveThousand(five,crypt)
 
+def runRSA(small,med,large):
+    # small 
+    rsaSmall(small)
+    print()
+    rsaMed(med)
+    print()
+    rsaLarge(large)
+
+def rsaSmall(small):
+    pksmall = rsa.getPubKey1024()
+    sksmall = rsa.getSecretKey1024()
+    print("RSA Encrypting up to 117-byte strings")
+    cipher = rsa.encryptPhrases(small,pksmall)
+    print("RSA Decrypting up to 117-byte strings")
+    recoverd = rsa.decryptPhrases(cipher,sksmall)
+    print("RSA Done with Encryption and Decryption of 117-byte strings")
+
+def rsaMed(med):
+    pkmed = rsa.getPubKey2048()
+    skmed = rsa.getSecretKey2048()
+    print("RSA Encrypting up to 245-byte strings")
+    cipher = rsa.encryptPhrases(med,pkmed)
+    print("RSA Decrypting up to 245-byte strings")
+    recoverd = rsa.decryptPhrases(cipher,skmed)
+    print("RSA Done with Encryption and Decryption of 245-byte strings")
+
+def rsaLarge(large):
+    pklarge = rsa.getPubKey4096()
+    sklarge = rsa.getSecretKey4096()
+    print("RSA Encrypting up to 468-byte strings")
+    cipher = rsa.encryptPhrases(large,pklarge)
+    print("RSA Decrypting up to 468-byte strings")
+    recoverd = rsa.decryptPhrases(cipher,sklarge)
+    print("RSA Done with Encryption and Decryption of 468-byte strings")
+
 def aesSmall(small,crypt):
     print("AES Encrypting up to 117-byte Strings")
     sCiphers = encryptPhrases(small,crypt)
@@ -77,5 +112,17 @@ small = dr.readFile("../Data/117.txt")
 med = dr.readFile("../Data/245.txt")
 large = dr.readFile("../Data/468.txt")
 fiveThousand = dr.readFile("../Data/fiveThousand.txt")
+# time holders 
+aesSmallTimes = []
+aesMedTimes = []
+aesLargeTimes = []
+aesFiveTimes = []
+
+rsaSmallTimes = []
+rsaMedTimes = [] 
+rsaLargeTimes = []
 
 runAES(small,med,large,fiveThousand)
+print()
+print()
+runRSA(small,med,large)
