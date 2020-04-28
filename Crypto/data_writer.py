@@ -24,7 +24,7 @@ def writeFirstTen():
 
 def write117():
     phrases = []
-    phrases = getPhrases(117,phrases)
+    phrases = getPhrases(86,phrases)
     try:
         f = open("../Data/117.txt", "w")
         for i in phrases:
