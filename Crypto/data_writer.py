@@ -22,11 +22,11 @@ def writeFirstTen():
     finally:
         f.close()
 
-def writeHundred():
+def write117():
     phrases = []
-    phrases = getPhrases(100,phrases)
+    phrases = getPhrases(117,phrases)
     try:
-        f = open("../Data/hundred.txt", "w")
+        f = open("../Data/117.txt", "w")
         for i in phrases:
             f.write(i)
             f.write("\n")
@@ -37,11 +37,11 @@ def writeHundred():
     finally:
         f.close()
 
-def writeThousand():
+def write245():
     phrases = []
-    phrases = getPhrases(1000,phrases)
+    phrases = getPhrases(245,phrases)
     try:
-        f = open("../Data/thousand.txt", "w")
+        f = open("../Data/245.txt", "w")
         for i in phrases:
             f.write(i)
             f.write("\n")
@@ -52,11 +52,11 @@ def writeThousand():
     finally:
         f.close()
 
-def writeTwoThousand():
+def write468():
     phrases = []
-    phrases = getPhrases(2000,phrases)
+    phrases = getPhrases(468,phrases)
     try:
-        f = open("../Data/twoThousand.txt", "w")
+        f = open("../Data/468.txt", "w")
         for i in phrases:
             f.write(i)
             f.write("\n")
@@ -108,4 +108,7 @@ def getPhrases(num,phrases):
     return phrases
 
 
+write117()
+write245()
+write468()
 writeFiveThousand()
