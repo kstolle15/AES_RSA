@@ -8,6 +8,9 @@ import data_writer as dw
 from Crypto.Util.Padding import pad, unpad
 from Crypto.Cipher import PKCS1_OAEP
 import datetime
+import matplotlib.pyplot as plt
+import numpy as np
+import pandas as pd
 
 def runAES(small,med,large):
     crypt = aes()
@@ -47,36 +50,36 @@ def runRSA(small,med,large):
 def rsaSmall(small):
     pksmall = rsa.getPubKey1024()
     sksmall = rsa.getSecretKey1024()
-    print("RSA Encrypting up to 117-byte strings")
+    print("RSA 117-byte Encrypting")
     cipher = rsaEncryptPhrases(small,pksmall)
     recoverd = rsaDecryptPhrases(cipher,sksmall)
 
 def rsaMed(med):
     pkmed = rsa.getPubKey2048()
     skmed = rsa.getSecretKey2048()
-    print("RSA Encrypting up to 245-byte strings")
+    print("RSA 245-byte Encrypting")
     cipher = rsaEncryptPhrases(med,pkmed)
     recoverd = rsaDecryptPhrases(cipher,skmed)
 
 def rsaLarge(large):
     pklarge = rsa.getPubKey4096()
     sklarge = rsa.getSecretKey4096()
-    print("RSA Encrypting up to 468-byte strings")
+    print("RSA 468-byte Encrypting")
     cipher = rsaEncryptPhrases(large,pklarge)
     recoverd = rsaDecryptPhrases(cipher,sklarge)
 
 def aesSmall(small,crypt):
-    print("AES Encrypting up to 117-byte Strings")
+    print("AES 117-byte Encrypting")
     sCiphers = aesEncryptPhrases(small,crypt)
     sRecovered = aesDecryptPhrases(sCiphers,crypt)
 
 def aesMed(med,crypt):
-    print("AES Encrypting up to 245-byte Strings")
+    print("AES 245-byte Encrypting")
     mCiphers = aesEncryptPhrases(med,crypt)
     mRecovered = aesDecryptPhrases(mCiphers,crypt)
 
 def aesLarge(large,crypt):
-    print("AES Encrypting up to 468-byte Strings")
+    print("AES RSA 468-byte Encrypting")
     lCiphers = aesEncryptPhrases(large,crypt)
     lRecovered = aesDecryptPhrases(lCiphers,crypt)
 
@@ -147,8 +150,6 @@ for i in range(1,11):
     print("Runing RSA Encryption and Decryption for Test " + str(i))
     runRSA(small,med,large)
 
-print(aesLargeTimes)
-print(rsaLargeTimes)
 # converting microseconds to seconds 
 # small conversions 
 for i in range(0,10):
@@ -181,5 +182,44 @@ for i in range(0,10):
     else:
         rsaLargeTimes[i] = rsaLargeTimes[i].seconds + (rsaLargeTimes[i].microseconds/1000000)
 
-print(aesLargeTimes)
-print(rsaLargeTimes)
+# average data sets
+aesAverages = []
+rsaAverages = []
+aesSmallSum = 0
+aesMedSum = 0
+aesLargeSum = 0
+rsaSmallSum = 0
+rsaMedSum = 0
+rsaLargeSum = 0
+for i in range(0,10):
+    aesSmallSum += aesSmallTimes[i]
+    aesMedSum += aesMedTimes[i]
+    aesLargeSum += aesLargeTimes[i]
+    rsaSmallSum += rsaSmallTimes[i]
+    rsaMedSum += rsaMedTimes[i]
+    rsaLargeSum += rsaLargeTimes[i]
+
+aesAverages.append(aesSmallSum/10)
+aesAverages.append(aesMedSum/10)
+aesAverages.append(aesLargeSum/10)
+rsaAverages.append(rsaSmallSum/10)
+rsaAverages.append(rsaMedSum/10)
+rsaAverages.append(rsaLargeSum/10)
+
+# graphing
+dfRSA = pd.DataFrame({'x': [117,245,468], 'y': [rsaAverages[0],rsaAverages[1],rsaAverages[2]] })
+dfAES = pd.DataFrame({'x': [117,245,468], 'y': [aesAverages[0],aesAverages[1],aesAverages[2]] })
+plt.plot('x','y', data=dfRSA, linestyle='-', marker='o',color='r')
+plt.plot('x','y', data=dfAES,linestyle = '-', marker = 'o', color='g')
+
+print(dfRSA)
+print(dfAES)
+
+# legend
+plt.legend(loc=2, ncol=2)
+# labels
+plt.title("AES and RSA Runtimes", loc='left', fontsize=12, fontweight=0, color='orange')
+plt.xlabel("Length of Message")
+plt.ylabel("Time (Seconds)")
+plt.show()
+    
