@@ -9,22 +9,40 @@ from Crypto.Util.Padding import pad, unpad
 from Crypto.Cipher import PKCS1_OAEP
 import datetime
 
-def runAES(small,med,large,five):
+def runAES(small,med,large):
     crypt = aes()
     # small
+    smallStart = datetime.datetime.now()
     aesSmall(small,crypt)
+    smallEnd = datetime.datetime.now()
+    aesSmallTimes.append(smallEnd - smallStart)    
     # med 
+    medStart = datetime.datetime.now()
     aesMed(med,crypt)
+    medEnd = datetime.datetime.now()
+    aesMedTimes.append(medEnd - medStart)
     # large
+    largeStart = datetime.datetime.now()
     aesLarge(large,crypt)
-    # five thousand
-    aesFiveThousand(five,crypt)
+    largeEnd = datetime.datetime.now()
+    aesLargeTimes.append(largeEnd-largeStart)
 
 def runRSA(small,med,large):
     # small 
+    smallStart = datetime.datetime.now()
     rsaSmall(small)
+    smallEnd = datetime.datetime.now()
+    rsaSmallTimes.append(smallEnd-smallStart)
+
+    medStart = datetime.datetime.now()
     rsaMed(med)
+    medEnd = datetime.datetime.now()
+    rsaMedTimes.append(medEnd - medStart)
+    
+    largeStart = datetime.datetime.now()
     rsaLarge(large)
+    largeEnd = datetime.datetime.now()
+    rsaLargeTimes.append(largeEnd - largeStart)
 
 def rsaSmall(small):
     pksmall = rsa.getPubKey1024()
@@ -102,15 +120,6 @@ def rsaDecryptPhrases(phrases,key):
     
     return recover
 
-# writing
-dw.write117bytes()
-dw.write245bytes()
-dw.write468bytes()
-# reading 
-small = dr.readFile("../Data/117.txt")
-med = dr.readFile("../Data/245.txt")
-large = dr.readFile("../Data/468.txt")
-fiveThousand = dr.readFile("../Data/fiveThousand.txt")
 # time holders 
 aesSmallTimes = []
 aesMedTimes = []
@@ -118,18 +127,59 @@ aesLargeTimes = []
 aesFiveTimes = []
 
 rsaSmallTimes = []
-rsaMedTimes = [] 
+rsaMedTimes = []
 rsaLargeTimes = []
 
-aesStart = datetime.datetime.now()
-runAES(small,med,large,fiveThousand)
-aesEnd = datetime.datetime.now()
-aesTotal = aesEnd - aesStart
-print(str(aesTotal.seconds) + "." + str(aesTotal.microseconds) + " seconds")
-print()
-print()
-rsaStart = datetime.datetime.now()
-runRSA(small,med,large)
-rsaEnd = datetime.datetime.now()
-totalRSA = rsaEnd - rsaStart
-print(str(totalRSA.seconds) + "." + str(totalRSA.microseconds) + " seconds")
+# run algorithms 10 times for new data each run 
+for i in range(1,11):
+    print("Running Test " + str(i))
+    # writing
+    dw.write117bytes()
+    dw.write245bytes()
+    dw.write468bytes()
+    # reading 
+    small = dr.readFile("../Data/117.txt")
+    med = dr.readFile("../Data/245.txt")
+    large = dr.readFile("../Data/468.txt")
+    print("Runing AES Encryption and Decryption for Test " + str(i))
+    runAES(small,med,large)
+    print()
+    print("Runing RSA Encryption and Decryption for Test " + str(i))
+    runRSA(small,med,large)
+
+print(aesLargeTimes)
+print(rsaLargeTimes)
+# converting microseconds to seconds 
+# small conversions 
+for i in range(0,10):
+    if(aesSmallTimes[i].seconds < 1):
+        aesSmallTimes[i] = aesSmallTimes[i].microseconds/1000000 # convert microseconds to miliseconds
+    else:
+        aesSmallTimes[i] = aesSmallTimes[i].seconds + (aesSmallTimes[i].microseconds/1000000)
+    if(rsaSmallTimes[i].seconds < 1):
+        rsaSmallTimes[i] = rsaSmallTimes[i].microseconds/1000000 # convert microseconds to miliseconds
+    else:
+        rsaSmallTimes[i] = rsaSmallTimes[i].seconds + (rsaSmallTimes[i].microseconds/1000000)
+# med conversions 
+for i in range(0,10):
+    if(aesMedTimes[i].seconds < 1):
+        aesMedTimes[i] = aesMedTimes[i].microseconds/1000000 # convert microseconds to miliseconds
+    else:
+        aesMedTimes[i] = aesMedTimes[i].seconds + (aesMedTimes[i].microseconds/1000000)
+    if(rsaMedTimes[i].seconds < 1):
+        rsaMedTimes[i] = rsaMedTimes[i].microseconds/1000000 # convert microseconds to miliseconds
+    else:
+        rsaMedTimes[i] = rsaMedTimes[i].seconds + (rsaMedTimes[i].microseconds/1000000)
+# large conversions
+for i in range(0,10):
+    if(aesLargeTimes[i].seconds < 1):
+        aesLargeTimes[i] = aesLargeTimes[i].microseconds/1000000 # convert microseconds to miliseconds
+    else:
+        aesLargeTimes[i] = aesLargeTimes[i].seconds + (aesLargeTimes[i].microseconds/1000000)
+    if(rsaLargeTimes[i].seconds < 1):
+        rsaLargeTimes[i] = rsaLargeTimes[i].microseconds/1000000 # convert microseconds to miliseconds
+    else:
+        rsaLargeTimes[i] = rsaLargeTimes[i].seconds + (rsaLargeTimes[i].microseconds/1000000)
+
+print(aesLargeTimes)
+print(rsaLargeTimes)
