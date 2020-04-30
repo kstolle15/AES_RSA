@@ -47,6 +47,26 @@ def runRSA(small,med,large):
     largeEnd = datetime.datetime.now()
     rsaLargeTimes.append(largeEnd - largeStart)
 
+def runModRSA(small,med,large):
+    # small 
+    crypt = aes()
+    smallStart = datetime.datetime.now()
+    modrsaSmall(small,crypt)
+    smallEnd = datetime.datetime.now()
+    modRsaSmallTimes.append(smallEnd - smallStart)
+
+    # med 
+    medStart = datetime.datetime.now()
+    modrsaMed(med,crypt)
+    medEnd = datetime.datetime.now()
+    modRsaMedTimes.append(medEnd - medStart)
+
+    # large
+    largeStart = datetime.datetime.now()
+    modrsaLarge(large,crypt)
+    largeEnd = datetime.datetime.now()
+    modRsaLargeTimes.append(largeEnd - largeStart) 
+
 def rsaSmall(small):
     pksmall = rsa.getPubKey1024()
     sksmall = rsa.getSecretKey1024()
@@ -67,6 +87,45 @@ def rsaLarge(large):
     print("RSA 468-byte Encrypting")
     cipher = rsaEncryptPhrases(large,pklarge)
     recoverd = rsaDecryptPhrases(cipher,sklarge)
+
+def modrsaSmall(small,crypt):
+    pksmall = rsa.getPubKey1024()
+    sksmall = rsa.getSecretKey1024()
+    e = PKCS1_OAEP.new(pksmall)
+    d = PKCS1_OAEP.new(sksmall)
+
+    print("MOD-RSA 117-byte Encrypting")
+    cipher = aesEncryptPhrases(small,crypt)
+    crypt.key = e.encrypt(crypt.key)
+
+    crypt.key = d.decrypt(crypt.key)
+    recoverd = aesDecryptPhrases(cipher,crypt)
+
+def modrsaMed(med,crypt):
+    pkmed = rsa.getPubKey2048()
+    skmed = rsa.getSecretKey2048()
+    e = PKCS1_OAEP.new(pkmed)
+    d = PKCS1_OAEP.new(skmed)
+
+    print("MOD-RSA 245-byte Encrypting")
+    cipher = aesEncryptPhrases(med,crypt)
+    crypt.key = e.encrypt(crypt.key)
+
+    crypt.key = d.decrypt(crypt.key)
+    recoverd = aesDecryptPhrases(cipher,crypt)
+
+def modrsaLarge(large,crypt):
+    pklarge = rsa.getPubKey4096()
+    sklarge = rsa.getSecretKey4096()
+    e = PKCS1_OAEP.new(pklarge)
+    d = PKCS1_OAEP.new(sklarge)
+
+    print("MOD-RSA 468-byte Encrypting")
+    cipher = aesEncryptPhrases(large,crypt)
+    crypt.key = e.encrypt(crypt.key)
+
+    crypt.key = d.decrypt(crypt.key)
+    recoverd = aesDecryptPhrases(cipher,crypt)
 
 def aesSmall(small,crypt):
     print("AES 117-byte Encrypting")
@@ -133,6 +192,10 @@ rsaSmallTimes = []
 rsaMedTimes = []
 rsaLargeTimes = []
 
+modRsaSmallTimes = []
+modRsaMedTimes = []
+modRsaLargeTimes = []
+
 # run algorithms 10 times for new data each run 
 for i in range(1,11):
     print("Running Test " + str(i))
@@ -146,6 +209,9 @@ for i in range(1,11):
     large = dr.readFile("../Data/468.txt")
     print("Runing AES Encryption and Decryption for Test " + str(i))
     runAES(small,med,large)
+    print()
+    print("Runing Modified RSA Encryption and Decryption for Test " + str(i))
+    runModRSA(small,med,large)
     print()
     print("Runing RSA Encryption and Decryption for Test " + str(i))
     runRSA(small,med,large)
@@ -161,6 +227,10 @@ for i in range(0,10):
         rsaSmallTimes[i] = rsaSmallTimes[i].microseconds/1000000 # convert microseconds to miliseconds
     else:
         rsaSmallTimes[i] = rsaSmallTimes[i].seconds + (rsaSmallTimes[i].microseconds/1000000)
+    if(modRsaSmallTimes[i].seconds < 1):
+        modRsaSmallTimes[i] = modRsaSmallTimes[i].microseconds/1000000 # convert microseconds to miliseconds
+    else:
+        modRsaSmallTimes[i] = modRsaSmallTimes[i].seconds + (modRsaSmallTimes[i].microseconds/1000000)
 # med conversions 
 for i in range(0,10):
     if(aesMedTimes[i].seconds < 1):
@@ -171,6 +241,10 @@ for i in range(0,10):
         rsaMedTimes[i] = rsaMedTimes[i].microseconds/1000000 # convert microseconds to miliseconds
     else:
         rsaMedTimes[i] = rsaMedTimes[i].seconds + (rsaMedTimes[i].microseconds/1000000)
+    if(modRsaMedTimes[i].seconds < 1):
+        modRsaMedTimes[i] = modRsaMedTimes[i].microseconds/1000000 # convert microseconds to miliseconds
+    else:
+        modRsaMedTimes[i] = modRsaMedTimes[i].seconds + (modRsaMedTimes[i].microseconds/1000000)
 # large conversions
 for i in range(0,10):
     if(aesLargeTimes[i].seconds < 1):
@@ -181,16 +255,24 @@ for i in range(0,10):
         rsaLargeTimes[i] = rsaLargeTimes[i].microseconds/1000000 # convert microseconds to miliseconds
     else:
         rsaLargeTimes[i] = rsaLargeTimes[i].seconds + (rsaLargeTimes[i].microseconds/1000000)
+    if(modRsaLargeTimes[i].seconds < 1):
+        modRsaLargeTimes[i] = modRsaLargeTimes[i].microseconds/1000000 # convert microseconds to miliseconds
+    else:
+        modRsaLargeTimes[i] = modRsaLargeTimes[i].seconds + (modRsaLargeTimes[i].microseconds/1000000)
 
 # average data sets
 aesAverages = []
 rsaAverages = []
+modrsaAverages = []
 aesSmallSum = 0
 aesMedSum = 0
 aesLargeSum = 0
 rsaSmallSum = 0
 rsaMedSum = 0
 rsaLargeSum = 0
+modrsaSmallSum = 0
+modrsaMedSum = 0
+modrsaLargeSum = 0
 for i in range(0,10):
     aesSmallSum += aesSmallTimes[i]
     aesMedSum += aesMedTimes[i]
@@ -198,6 +280,9 @@ for i in range(0,10):
     rsaSmallSum += rsaSmallTimes[i]
     rsaMedSum += rsaMedTimes[i]
     rsaLargeSum += rsaLargeTimes[i]
+    modrsaSmallSum += modRsaSmallTimes[i]
+    modrsaMedSum += modRsaMedTimes[i]
+    modrsaLargeSum += modRsaLargeTimes[i]
 
 aesAverages.append(aesSmallSum/10)
 aesAverages.append(aesMedSum/10)
@@ -205,21 +290,26 @@ aesAverages.append(aesLargeSum/10)
 rsaAverages.append(rsaSmallSum/10)
 rsaAverages.append(rsaMedSum/10)
 rsaAverages.append(rsaLargeSum/10)
+modrsaAverages.append(modrsaSmallSum/10)
+modrsaAverages.append(modrsaMedSum/10)
+modrsaAverages.append(modrsaLargeSum/10)
 
 # graphing
-dfRSA = pd.DataFrame({'x': [117,245,468], 'y': [rsaAverages[0],rsaAverages[1],rsaAverages[2]] })
-dfAES = pd.DataFrame({'x': [117,245,468], 'y': [aesAverages[0],aesAverages[1],aesAverages[2]] })
-plt.plot('x','y', data=dfRSA, linestyle='-', marker='o',color='r')
-plt.plot('x','y', data=dfAES,linestyle = '-', marker = 'o', color='g')
+dfRSA = pd.DataFrame({'x': [117,245,468], 'RSA': [rsaAverages[0],rsaAverages[1],rsaAverages[2]] })
+dfAES = pd.DataFrame({'x': [117,245,468], 'AES': [aesAverages[0],aesAverages[1],aesAverages[2]] })
+dfModRSA = pd.DataFrame({'x': [117,245,468], 'MOD-RSA': [modrsaAverages[0],modrsaAverages[1],modrsaAverages[2]] })
+plt.plot('x','RSA', data=dfRSA, linestyle='-', marker='o',color='r')
+plt.plot('x','AES', data=dfAES,linestyle = '-', marker = 'o', color='g')
+plt.plot('x','MOD-RSA', data=dfModRSA,linestyle = '-', marker = 'o', color='black')
 
-print(dfRSA)
 print(dfAES)
+print(dfModRSA)
+print(dfRSA)
 
 # legend
 plt.legend(loc=2, ncol=2)
 # labels
 plt.title("AES and RSA Runtimes", loc='left', fontsize=12, fontweight=0, color='orange')
-plt.xlabel("Length of Message")
+plt.xlabel("Length of Message (characters)")
 plt.ylabel("Time (Seconds)")
 plt.show()
-    
