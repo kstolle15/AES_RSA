@@ -310,6 +310,6 @@ print(dfRSA)
 plt.legend(loc=2, ncol=2)
 # labels
 plt.title("AES and RSA Runtimes", loc='left', fontsize=12, fontweight=0, color='orange')
-plt.xlabel("Length of Message (characters)")
+plt.xlabel("Length of Message (bytes)")
 plt.ylabel("Time (Seconds)")
 plt.show()
