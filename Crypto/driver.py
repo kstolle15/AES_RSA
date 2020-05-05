@@ -13,22 +13,24 @@ import numpy as np
 import pandas as pd
 
 def runAES(small,med,large):
-    crypt = aes()
+    cryptOne = aes()
+    cryptTwo = aes()
+    cryptThree = aes()
     # small
     smallStart = datetime.datetime.now()
-    aesSmall(small,crypt)
-    smallEnd = datetime.datetime.now()
-    aesSmallTimes.append(smallEnd - smallStart)    
+    aesSmall(small,cryptOne)
+    smallEnd = datetime.datetime.now()  
+    cryptOne.totalTime = smallEnd - smallStart
     # med 
     medStart = datetime.datetime.now()
-    aesMed(med,crypt)
+    aesMed(med,cryptTwo)
     medEnd = datetime.datetime.now()
-    aesMedTimes.append(medEnd - medStart)
+    cryptTwo.totalTime = medEnd - medStart
     # large
     largeStart = datetime.datetime.now()
-    aesLarge(large,crypt)
+    aesLarge(large,cryptThree)
     largeEnd = datetime.datetime.now()
-    aesLargeTimes.append(largeEnd-largeStart)
+    cryptThree.totalTime = largeEnd - largeStart
 
 def runRSA(small,med,large):
     # small 
@@ -129,41 +131,23 @@ def modrsaLarge(large,crypt):
 
 def aesSmall(small,crypt):
     print("AES 117-byte Encrypting")
-    sCiphers = aesEncryptPhrases(small,crypt)
-    sRecovered = aesDecryptPhrases(sCiphers,crypt)
+    sCiphers = crypt.encryptPhrases(small)
+    sRecovered = crypt.decryptPhrases(sCiphers)
 
 def aesMed(med,crypt):
     print("AES 245-byte Encrypting")
-    mCiphers = aesEncryptPhrases(med,crypt)
-    mRecovered = aesDecryptPhrases(mCiphers,crypt)
+    mCiphers = crypt.encryptPhrases(med)
+    mRecovered = crypt.decryptPhrases(mCiphers)
 
 def aesLarge(large,crypt):
     print("AES RSA 468-byte Encrypting")
-    lCiphers = aesEncryptPhrases(large,crypt)
-    lRecovered = aesDecryptPhrases(lCiphers,crypt)
+    lCiphers = crypt.encryptPhrases(large)
+    lRecovered = crypt.decryptPhrases(lCiphers)
 
 def aesFiveThousand(five,crypt):
     print("AES Encrypting strings up to 5,000")
     ciphers = aesEncryptPhrases(five,crypt)
     recoverd = aesDecryptPhrases(ciphers,crypt)
-    
-def aesEncryptPhrases(phrases,c):
-    encryptedPhrases = []
-    for phrase in phrases:
-        plaintext = pad(phrase,16)
-        ciphertext = c.encrypt(plaintext)
-        encryptedPhrases.append(ciphertext)
-
-    return encryptedPhrases
-
-def aesDecryptPhrases(phrases,c):
-    decryptedPhrases = []
-    for line in phrases:
-        recoveredText = c.decrypt(line)
-        recoveredText = unpad(recoveredText,16)
-        decryptedPhrases.append(recoveredText)
-
-    return decryptedPhrases
 
 def rsaEncryptPhrases(phrases,key):
     cipher = []
@@ -215,84 +199,6 @@ for i in range(1,11):
     print()
     print("Runing RSA Encryption and Decryption for Test " + str(i))
     runRSA(small,med,large)
-
-# converting microseconds to seconds 
-# small conversions 
-for i in range(0,10):
-    if(aesSmallTimes[i].seconds < 1):
-        aesSmallTimes[i] = aesSmallTimes[i].microseconds/1000000 # convert microseconds to miliseconds
-    else:
-        aesSmallTimes[i] = aesSmallTimes[i].seconds + (aesSmallTimes[i].microseconds/1000000)
-    if(rsaSmallTimes[i].seconds < 1):
-        rsaSmallTimes[i] = rsaSmallTimes[i].microseconds/1000000 # convert microseconds to miliseconds
-    else:
-        rsaSmallTimes[i] = rsaSmallTimes[i].seconds + (rsaSmallTimes[i].microseconds/1000000)
-    if(modRsaSmallTimes[i].seconds < 1):
-        modRsaSmallTimes[i] = modRsaSmallTimes[i].microseconds/1000000 # convert microseconds to miliseconds
-    else:
-        modRsaSmallTimes[i] = modRsaSmallTimes[i].seconds + (modRsaSmallTimes[i].microseconds/1000000)
-# med conversions 
-for i in range(0,10):
-    if(aesMedTimes[i].seconds < 1):
-        aesMedTimes[i] = aesMedTimes[i].microseconds/1000000 # convert microseconds to miliseconds
-    else:
-        aesMedTimes[i] = aesMedTimes[i].seconds + (aesMedTimes[i].microseconds/1000000)
-    if(rsaMedTimes[i].seconds < 1):
-        rsaMedTimes[i] = rsaMedTimes[i].microseconds/1000000 # convert microseconds to miliseconds
-    else:
-        rsaMedTimes[i] = rsaMedTimes[i].seconds + (rsaMedTimes[i].microseconds/1000000)
-    if(modRsaMedTimes[i].seconds < 1):
-        modRsaMedTimes[i] = modRsaMedTimes[i].microseconds/1000000 # convert microseconds to miliseconds
-    else:
-        modRsaMedTimes[i] = modRsaMedTimes[i].seconds + (modRsaMedTimes[i].microseconds/1000000)
-# large conversions
-for i in range(0,10):
-    if(aesLargeTimes[i].seconds < 1):
-        aesLargeTimes[i] = aesLargeTimes[i].microseconds/1000000 # convert microseconds to miliseconds
-    else:
-        aesLargeTimes[i] = aesLargeTimes[i].seconds + (aesLargeTimes[i].microseconds/1000000)
-    if(rsaLargeTimes[i].seconds < 1):
-        rsaLargeTimes[i] = rsaLargeTimes[i].microseconds/1000000 # convert microseconds to miliseconds
-    else:
-        rsaLargeTimes[i] = rsaLargeTimes[i].seconds + (rsaLargeTimes[i].microseconds/1000000)
-    if(modRsaLargeTimes[i].seconds < 1):
-        modRsaLargeTimes[i] = modRsaLargeTimes[i].microseconds/1000000 # convert microseconds to miliseconds
-    else:
-        modRsaLargeTimes[i] = modRsaLargeTimes[i].seconds + (modRsaLargeTimes[i].microseconds/1000000)
-
-# average data sets
-aesAverages = []
-rsaAverages = []
-modrsaAverages = []
-aesSmallSum = 0
-aesMedSum = 0
-aesLargeSum = 0
-rsaSmallSum = 0
-rsaMedSum = 0
-rsaLargeSum = 0
-modrsaSmallSum = 0
-modrsaMedSum = 0
-modrsaLargeSum = 0
-for i in range(0,10):
-    aesSmallSum += aesSmallTimes[i]
-    aesMedSum += aesMedTimes[i]
-    aesLargeSum += aesLargeTimes[i]
-    rsaSmallSum += rsaSmallTimes[i]
-    rsaMedSum += rsaMedTimes[i]
-    rsaLargeSum += rsaLargeTimes[i]
-    modrsaSmallSum += modRsaSmallTimes[i]
-    modrsaMedSum += modRsaMedTimes[i]
-    modrsaLargeSum += modRsaLargeTimes[i]
-
-aesAverages.append(aesSmallSum/10)
-aesAverages.append(aesMedSum/10)
-aesAverages.append(aesLargeSum/10)
-rsaAverages.append(rsaSmallSum/10)
-rsaAverages.append(rsaMedSum/10)
-rsaAverages.append(rsaLargeSum/10)
-modrsaAverages.append(modrsaSmallSum/10)
-modrsaAverages.append(modrsaMedSum/10)
-modrsaAverages.append(modrsaLargeSum/10)
 
 # graphing
 dfRSA = pd.DataFrame({'x': [117,245,468], 'RSA': [rsaAverages[0],rsaAverages[1],rsaAverages[2]] })
