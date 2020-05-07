@@ -113,8 +113,3 @@ def getPhrases(num,phrases):
         phrases.append(phrase)
 
     return phrases
-
-
-write468bytes()
-write117bytes()
-write245bytes()
