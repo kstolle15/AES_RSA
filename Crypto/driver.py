@@ -86,6 +86,7 @@ def runRSA(s,m,l):
     rsaDecryptionAverages[0] += sAvgD
     rsaDecryptionAverages[1] += mAvgD
     rsaDecryptionAverages[2] += lAvgD
+    crypt.totalTimes = crypt.converToSeconds(crypt.totalTimes)
     for i in range(0,3):
         rsaTotals[i] += crypt.totalTimes[i]
 
