@@ -124,8 +124,6 @@ def testNum(phrases,c):
     else:
         print("Something went wrong")
         return False
-    
-runTest()
 
 
     
