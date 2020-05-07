@@ -3,6 +3,7 @@
 
 from AES import aes 
 from rsa import rsa
+from modrsa import modrsa
 import data_reader as dr 
 import data_writer as dw 
 from Crypto.Util.Padding import pad, unpad
@@ -91,6 +92,47 @@ def runRSA(s,m,l):
         rsaTotals[i] += crypt.totalTimes[i]
 
 
+def runModRSA(s,m,l):
+    smallmod = modrsa()
+    medmod = modrsa()
+    largemod = modrsa()
+
+    smallstart = datetime.datetime.now()
+    smallmod.encryptDecryptPhrases(s)
+    smallend = datetime.datetime.now()
+    totalTime = smallend - smallstart
+    totalTime = totalTime.seconds + (totalTime.microseconds/1000000)
+    modRsaTotals[0] += totalTime
+    smallmod.addTimes()
+    smallavgE = smallmod.calcAverage(smallmod.encryptTimes)
+    smallavgD = smallmod.calcAverage(smallmod.encryptTimes)
+    modRsaEncryptionAverages[0] += smallavgE
+    modRsaDecryptionAverages[0] += smallavgD
+
+    medstart = datetime.datetime.now()
+    medmod.encryptDecryptPhrases(m)
+    medend = datetime.datetime.now()
+    totalTime = medend - medstart
+    totalTime = totalTime.seconds + (totalTime.microseconds/1000000)
+    modRsaTotals[1] += totalTime
+    medmod.addTimes()
+    medavgE = medmod.calcAverage(medmod.encryptTimes)
+    medavgD = medmod.calcAverage(medmod.decryptTimes)
+    modRsaEncryptionAverages[1] += medavgE 
+    modRsaDecryptionAverages[1] += medavgD
+
+    largestart = datetime.datetime.now()
+    largemod.encryptDecryptPhrases(l)
+    largeend = datetime.datetime.now()
+    totalTime = largeend - largestart
+    totalTime = totalTime.seconds + (totalTime.microseconds/1000000)
+    modRsaTotals[2] += totalTime
+    largemod.addTimes()
+    largeavgE = largemod.calcAverage(largemod.encryptTimes)
+    largeavgD = largemod.calcAverage(largemod.decryptTimes)
+    modRsaEncryptionAverages[2] += largeavgE
+    modRsaDecryptionAverages[2] += largeavgD
+
     
 
 
@@ -101,6 +143,10 @@ aesTotals = [0,0,0]
 rsaEncryptionAverages = [0,0,0]
 rsaDecryptionAverages = [0,0,0]
 rsaTotals = [0,0,0]
+
+modRsaEncryptionAverages = [0,0,0]
+modRsaDecryptionAverages = [0,0,0]
+modRsaTotals = [0,0,0]
 
 for i in range(1,11):
     print("Running test " + str(i))
@@ -117,6 +163,9 @@ for i in range(1,11):
     print("Running RSA Encryption and Decryption")
     runRSA(small,med,large)
     print()
+    print("Running Mod-RSA Encryption and Decryption")
+    runModRSA(small,med,large)
+    print()
 
 
 # average everything
@@ -129,28 +178,65 @@ for i in range(0,3):
     rsaDecryptionAverages[i] = rsaDecryptionAverages[i]/10
     rsaTotals[i] = rsaTotals[i]/10
     
+    modRsaEncryptionAverages[i] = modRsaEncryptionAverages[i]/10
+    modRsaDecryptionAverages[i] = modRsaDecryptionAverages[i]/10
+    modRsaTotals[i] = modRsaTotals[i]/10
 
-print(aesEncryptionAverages,rsaEncryptionAverages)
-print(aesDecryptionAverages,rsaDecryptionAverages)
-print(aesTotals,rsaTotals)
+print(aesEncryptionAverages,rsaEncryptionAverages, modRsaEncryptionAverages)
+print(aesDecryptionAverages,rsaDecryptionAverages, modRsaDecryptionAverages)
+print(aesTotals,rsaTotals,modRsaTotals)
 
-"""
+
 # graphing
-dfRSA = pd.DataFrame({'x': [117,245,468], 'RSA': [rsaAverages[0],rsaAverages[1],rsaAverages[2]] })
-dfAES = pd.DataFrame({'x': [117,245,468], 'AES': [aesAverages[0],aesAverages[1],aesAverages[2]] })
-dfModRSA = pd.DataFrame({'x': [117,245,468], 'MOD-RSA': [modrsaAverages[0],modrsaAverages[1],modrsaAverages[2]] })
-plt.plot('x','RSA', data=dfRSA, linestyle='-', marker='o',color='r')
-plt.plot('x','AES', data=dfAES,linestyle = '-', marker = 'o', color='g')
-plt.plot('x','MOD-RSA', data=dfModRSA,linestyle = '-', marker = 'o', color='black')
-
-print(dfAES)
-print(dfModRSA)
-print(dfRSA)
+dfRSAE = pd.DataFrame({'x': [117,245,468], 'RSA-Encryption Times': [rsaEncryptionAverages[0],rsaEncryptionAverages[1],rsaEncryptionAverages[2]] })
+dfRSAD = pd.DataFrame({'x': [117,245,468], 'RSA-Decryption Times': [rsaDecryptionAverages[0],rsaDecryptionAverages[1],rsaDecryptionAverages[2]] })
+plt.plot('x','RSA-Encryption Times', data=dfRSAE, linestyle='-', marker='o',color='r')
+plt.plot('x','RSA-Decryption Times', data=dfRSAD, linestyle='-', marker='o',color='b')
 
 # legend
 plt.legend(loc=2, ncol=2)
 # labels
-plt.title("AES and RSA Runtimes", loc='left', fontsize=12, fontweight=0, color='orange')
+plt.title("RSA Encryption and Decryption Runtimes", loc='left', fontsize=12, fontweight=0, color='orange')
 plt.xlabel("Length of Message (bytes)")
 plt.ylabel("Time (Seconds)")
-plt.show()"""
+plt.show()
+
+dfAESE = pd.DataFrame({'x': [117,245,468], 'AES-Encryption Times': [aesEncryptionAverages[0],aesEncryptionAverages[1],aesEncryptionAverages[2]] })
+dfAESD = pd.DataFrame({'x': [117,245,468], 'AES-Decryption Times': [aesDecryptionAverages[0],aesDecryptionAverages[1],aesDecryptionAverages[2]] })
+plt.plot('x','AES-Encryption Times', data=dfAESE,linestyle = '-', marker = 'o', color='g')
+plt.plot('x','AES-Decryption Times', data=dfAESD,linestyle = '-', marker = 'o', color='#BE08FF')
+
+# legend
+plt.legend(loc=2, ncol=2)
+# labels
+plt.title("AES Encryption and Decryption Runtimes", loc='left', fontsize=12, fontweight=0, color='orange')
+plt.xlabel("Length of Message (bytes)")
+plt.ylabel("Time (Seconds)")
+plt.show()
+
+dfModRSAE = pd.DataFrame({'x': [117,245,468], 'MOD-RSA-Encryption Times': [modRsaEncryptionAverages[0],modRsaEncryptionAverages[1],modRsaEncryptionAverages[2]] })
+dfModRSAD = pd.DataFrame({'x': [117,245,468], 'MOD-RSA-Decryption Times': [modRsaDecryptionAverages[0],modRsaDecryptionAverages[1],modRsaDecryptionAverages[2]] })
+plt.plot('x','MOD-RSA-Encryption Times', data=dfModRSAE,linestyle = '-', marker = 'o', color='black')
+plt.plot('x','MOD-RSA-Decryption Times', data=dfModRSAD,linestyle = '-', marker = 'o', color='#FFA10C')
+
+# legend
+plt.legend(loc=2, ncol=2)
+# labels
+plt.title("AES Encryption and Decryption Runtimes", loc='left', fontsize=12, fontweight=0, color='orange')
+plt.xlabel("Length of Message (bytes)")
+plt.ylabel("Time (Seconds)")
+plt.show()
+
+dfRSA = pd.DataFrame({'x': [117,245,468], 'RSA Runtime': [rsaTotals[0],rsaTotals[1],rsaTotals[2]] })
+dfAES = pd.DataFrame({'x': [117,245,468], 'AES Runtime': [aesTotals[0],aesTotals[1],aesTotals[2]] })
+dfModRSA = pd.DataFrame({'x': [117,245,468], 'Mod-RSA Runtime': [modRsaTotals[0],modRsaTotals[1],modRsaTotals[2]] })
+plt.plot('x','RSA Runtime', data=dfRSA, linestyle='-', marker='o',color='#1E12FF')
+plt.plot('x','AES Runtime',data=dfAES, linestyle='-',marker='o',color='#01FF34')
+plt.plot('x','Mod-RSA Runtime',data=dfModRSA, linestyle='-',marker='o',color='#FF001A')
+
+plt.legend(loc=2,ncol=2)
+#labels 
+plt.title("AES, RSA, and Mod-RSA Runtimes", loc='left',fontsize=12,fontweight=0,color='orange')
+plt.xlabel("Length of Message (bytes)")
+plt.ylabel("Time (Seconds)")
+plt.show()
