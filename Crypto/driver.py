@@ -2,7 +2,7 @@
 # This program will be used to run both algorithms while recording runtimes and then displaying the results.
 
 from AES import aes 
-import rsa
+from rsa import rsa
 import data_reader as dr 
 import data_writer as dw 
 from Crypto.Util.Padding import pad, unpad
@@ -54,10 +54,52 @@ def runAES(s,m,l):
     aesEncryptionAverages[2] += avgE
     aesDecryptionAverages[2] += avgD
 
+def runRSA(s,m,l):
+    crypt = rsa()
+    smallStart = datetime.datetime.now()
+    c1 = crypt.encryptPhrases(s,crypt.smallpubkey)
+    r1 = crypt.decryptPhrases(c1,crypt.smallseckey)
+    smallEnd = datetime.datetime.now()
+    crypt.totalTimes.append(smallEnd - smallStart)
+
+    medstart = datetime.datetime.now()
+    c2 = crypt.encryptPhrases(m,crypt.medpubkey)
+    r2 = crypt.decryptPhrases(c2,crypt.medseckey)
+    medend = datetime.datetime.now()
+    crypt.totalTimes.append(medend - medstart)
+
+    largestart = datetime.datetime.now()
+    c4 = crypt.encryptPhrases(l,crypt.largepubkey)
+    r4 = crypt.decryptPhrases(c4,crypt.largeseckey)
+    largeend = datetime.datetime.now()
+    crypt.totalTimes.append(largeend - largestart)
+
+    sAvgE = crypt.calcAverage(crypt.converToSeconds(crypt.smallencryptTimes))
+    sAvgD = crypt.calcAverage(crypt.converToSeconds(crypt.smalldecryptTimes))
+    mAvgE = crypt.calcAverage(crypt.converToSeconds(crypt.medencrypttTimes))
+    mAvgD = crypt.calcAverage(crypt.converToSeconds(crypt.meddecryptTimes))
+    lAvgE = crypt.calcAverage(crypt.converToSeconds(crypt.largeencryptTimes))
+    lAvgD = crypt.calcAverage(crypt.converToSeconds(crypt.largedecryptTimes))
+    rsaEncryptionAverages[0] += sAvgE
+    rsaEncryptionAverages[1] += mAvgE
+    rsaEncryptionAverages[2] += lAvgE
+    rsaDecryptionAverages[0] += sAvgD
+    rsaDecryptionAverages[1] += mAvgD
+    rsaDecryptionAverages[2] += lAvgD
+    for i in range(0,3):
+        rsaTotals[i] += crypt.totalTimes[i]
+
+
+    
+
 
 aesEncryptionAverages = [0,0,0]
 aesDecryptionAverages = [0,0,0]
 aesTotals = [0,0,0]
+
+rsaEncryptionAverages = [0,0,0]
+rsaDecryptionAverages = [0,0,0]
+rsaTotals = [0,0,0]
 
 for i in range(1,11):
     print("Running test " + str(i))
@@ -71,6 +113,10 @@ for i in range(1,11):
     print("Running AES Encryption and Decryption")
     runAES(small,med,large)
     print()
+    print("Running RSA Encryption and Decryption")
+    runRSA(small,med,large)
+    print()
+
 
 # average everything
 for i in range(0,3):
@@ -78,9 +124,14 @@ for i in range(0,3):
     aesDecryptionAverages[i] = aesDecryptionAverages[i]/10
     aesTotals[i] = aesTotals[i]/10
 
-print(aesEncryptionAverages)
-print(aesDecryptionAverages)
-print(aesTotals)
+    rsaEncryptionAverages[i] = rsaEncryptionAverages[i]/10
+    rsaDecryptionAverages[i] = rsaDecryptionAverages[i]/10
+    rsaTotals[i] = rsaTotals[i]/10
+    
+
+print(aesEncryptionAverages,rsaEncryptionAverages)
+print(aesDecryptionAverages,rsaDecryptionAverages)
+print(aesTotals,rsaTotals)
 
 """
 # graphing
