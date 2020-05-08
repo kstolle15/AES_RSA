@@ -258,8 +258,8 @@ for i in range(1,11):
 
 # average everything
 for i in range(0,3):
-    aesEncryptionAverages[i] = format(aesEncryptionAverages[i]/10, '.12f')
-    aesDecryptionAverages[i] = format(aesDecryptionAverages[i]/10, '.12f')
+    aesEncryptionAverages[i] = float(format(aesEncryptionAverages[i]/10, '.12f'))
+    aesDecryptionAverages[i] = float(format(aesDecryptionAverages[i]/10, '.12f'))
     aesTotals[i] = aesTotals[i]/10
 
     rsaEncryptionAverages[i] = rsaEncryptionAverages[i]/10
@@ -372,12 +372,12 @@ for i in range(0,2):
     decryptionFiveTimes[i] = decryptionFiveTimes[i]/10
     totalFiveTimes[i] = totalFiveTimes[i]/10
 
-encryptionFiveTimes[0] = format(encryptionFiveTimes[0], '.12f')
-decryptionFiveTimes[0] = format(decryptionFiveTimes[0], '.12f')
-encryptionThreeTimes[0] = format(encryptionThreeTimes[0], '.12f')
-decryptionThreeTimes[0] = format(decryptionThreeTimes[0], '.12f')
-encryptionOneTimes[0] = format(encryptionOneTimes[0], '.12f')
-decryptionOneTimes[0] = format(decryptionOneTimes[0], '.12f')
+encryptionFiveTimes[0] = float(format(encryptionFiveTimes[0], '.12f'))
+decryptionFiveTimes[0] = float(format(decryptionFiveTimes[0], '.12f'))
+encryptionThreeTimes[0] = float(format(encryptionThreeTimes[0], '.12f'))
+decryptionThreeTimes[0] = float(format(decryptionThreeTimes[0], '.12f'))
+encryptionOneTimes[0] = float(format(encryptionOneTimes[0], '.12f'))
+decryptionOneTimes[0] = float(format(decryptionOneTimes[0], '.12f'))
 
 print(encryptionOneTimes,encryptionThreeTimes,encryptionFiveTimes)
 print(decryptionOneTimes,decryptionThreeTimes,decryptionFiveTimes)
