@@ -85,6 +85,20 @@ def runAESThree(three):
     encryptionThreeTimes[0] += avgE
     decryptionThreeTimes[0] += avgD
 
+def runAESOne(one):
+    crypt = aes()
+    
+    start = datetime.datetime.now()
+    ciphers = crypt.encryptPhrases(one)
+    recovered = crypt.decryptPhrases(ciphers)
+    end = datetime.datetime.now()
+    total = end - start
+    total = total.seconds + (total.microseconds/1000000)
+    totalOneTimes[0] += total
+    avgE = crypt.calcAverage(crypt.converToSeconds(crypt.encryptTimes))
+    avgD = crypt.calcAverage(crypt.converToSeconds(crypt.decryptTimes))
+    encryptionOneTimes[0] += avgE
+    decryptionOneTimes[0] += avgD
 
 def runRSA(s,m,l):
     crypt = rsa()
@@ -193,6 +207,21 @@ def runModRSAThree(three):
     avgD = mod.calcAverage(mod.decryptTimes)
     encryptionThreeTimes[1] += avgE
     decryptionThreeTimes[1] += avgD
+
+def runModRSAOne(one):
+    mod = modrsa()
+    
+    start = datetime.datetime.now()
+    mod.encryptDecryptPhrases(one)
+    end = datetime.datetime.now()
+    totalTime = end - start
+    totalTime = totalTime.seconds + (totalTime.microseconds/1000000)
+    totalOneTimes[1] += totalTime
+    mod.addTimes()
+    avgE = mod.calcAverage(mod.encryptTimes)
+    avgD = mod.calcAverage(mod.decryptTimes)
+    encryptionOneTimes[1] += avgE
+    decryptionOneTimes[1] += avgD
 
 
 aesEncryptionAverages = [0,0,0]
@@ -308,24 +337,34 @@ totalFiveTimes = [0,0]
 encryptionThreeTimes = [0,0]
 decryptionThreeTimes = [0,0]
 totalThreeTimes = [0,0]
+encryptionOneTimes = [0,0]
+decryptionOneTimes = [0,0]
+totalOneTimes = [0,0]
 
 for i in range(1,11):
     print("Running test " + str(i))
     dw.writeFiveThousand()
     dw.writeThreeThousand()
+    dw.writeOneThousand()
     five = dr.readFile("../Data/fiveThousand.txt")
     three = dr.readFile("../Data/threeThousand.txt")
+    one = dr.readFile("../Data/oneThousand.txt")
 
-    print("Running AES Encryption and Decryption on 5000 and 3000-character length messages")
+    print("Running AES Encryption and Decryption on 5000, 3000, and 1000-character length messages")
     runAESThree(three)
     runAESFive(five)
+    runAESOne(one)
     print()
-    print("Running Mod-RSA Encryption and Decryption on 5000 and 3000-character length messages")
+    print("Running Mod-RSA Encryption and Decryption on 5000, 3000, 1000-character length messages")
     runModRSAFive(five)
     runModRSAThree(three)
+    runModRSAOne(one)
 
 # average everything
 for i in range(0,2):
+    encryptionOneTimes[i] = encryptionOneTimes[i]/10
+    decryptionOneTimes[i] = decryptionOneTimes[i]/10
+    totalOneTimes[i] = totalOneTimes[i]/10
     encryptionThreeTimes[i] = encryptionThreeTimes[i]/10
     decryptionThreeTimes[i] = decryptionThreeTimes[i]/10
     totalThreeTimes[i] = totalThreeTimes[i]/10
@@ -337,13 +376,15 @@ encryptionFiveTimes[0] = format(encryptionFiveTimes[0], '.12f')
 decryptionFiveTimes[0] = format(decryptionFiveTimes[0], '.12f')
 encryptionThreeTimes[0] = format(encryptionThreeTimes[0], '.12f')
 decryptionThreeTimes[0] = format(decryptionThreeTimes[0], '.12f')
+encryptionOneTimes[0] = format(encryptionOneTimes[0], '.12f')
+decryptionOneTimes[0] = format(decryptionOneTimes[0], '.12f')
 
-print(encryptionThreeTimes,encryptionFiveTimes)
-print(decryptionThreeTimes,decryptionFiveTimes)
-print(totalThreeTimes,totalFiveTimes)
+print(encryptionOneTimes,encryptionThreeTimes,encryptionFiveTimes)
+print(decryptionOneTimes,decryptionThreeTimes,decryptionFiveTimes)
+print(totalOneTimes,totalThreeTimes,totalFiveTimes)
 
-dfsAE = pd.DataFrame({'x': [0,3000,5000],'Encryption Time for AES': [format(0,'.12f'),encryptionThreeTimes[0],encryptionFiveTimes[0]] })
-dfsAD = pd.DataFrame({'x': [0,3000,5000], 'Decryption Time for AES': [format(0,'.12f'),decryptionThreeTimes[0],decryptionFiveTimes[0]] })
+dfsAE = pd.DataFrame({'x': [1000,3000,5000],'Encryption Time for AES': [encryptionOneTimes[0],encryptionThreeTimes[0],encryptionFiveTimes[0]] })
+dfsAD = pd.DataFrame({'x': [1000,3000,5000], 'Decryption Time for AES': [decryptionOneTimes[0],decryptionThreeTimes[0],decryptionFiveTimes[0]] })
 plt.plot('x','Encryption Time for AES', data=dfsAE, linestyle='-', marker='o',color='#1E12FF')
 plt.plot('x','Decryption Time for AES',data=dfsAD, linestyle='-',marker='o',color='#01FF34')
 
@@ -355,21 +396,21 @@ plt.xlabel("Length of Message (bytes)")
 plt.ylabel("Time (Seconds)")
 plt.show()
 
-dfsME = pd.DataFrame({'x': [0,3000,5000],'Encryption Time for Mod-RSA': [0,encryptionThreeTimes[1],encryptionFiveTimes[1]] })
-dfsMD = pd.DataFrame({'x': [0,3000,5000],'Decryption Time for Mod-RSA': [0,decryptionThreeTimes[1],decryptionFiveTimes[1]] })
+dfsME = pd.DataFrame({'x': [1000,3000,5000],'Encryption Time for Mod-RSA': [encryptionOneTimes[1],encryptionThreeTimes[1],encryptionFiveTimes[1]] })
+dfsMD = pd.DataFrame({'x': [1000,3000,5000],'Decryption Time for Mod-RSA': [decryptionOneTimes[1],decryptionThreeTimes[1],decryptionFiveTimes[1]] })
 plt.plot('x','Encryption Time for Mod-RSA', data=dfsME, linestyle='-', marker='o',color='#1E12FF')
 plt.plot('x','Decryption Time for Mod-RSA',data=dfsMD, linestyle='-',marker='o',color='#01FF34')
 
 # legend
-plt.legend(loc=2, ncol=1)
+plt.legend(loc=5, ncol=1)
 # labels
 plt.title("Mod-RSA Encryption and Decryption Runtimes", loc='left', fontsize=12, fontweight=0, color='orange')
 plt.xlabel("Length of Message (bytes)")
 plt.ylabel("Time (Seconds)")
 plt.show()
 
-dfsAT = pd.DataFrame({'x': [0,3000,5000],'Run Time for AES': [0,totalThreeTimes[0],totalFiveTimes[0]] })
-dfsMT = pd.DataFrame({'x': [0,3000,5000],'Run Time for Mod-RSA': [0,totalThreeTimes[1],totalFiveTimes[1]] })
+dfsAT = pd.DataFrame({'x': [1000,3000,5000],'Run Time for AES': [totalOneTimes[0],totalThreeTimes[0],totalFiveTimes[0]] })
+dfsMT = pd.DataFrame({'x': [1000,3000,5000],'Run Time for Mod-RSA': [totalOneTimes[1],totalThreeTimes[1],totalFiveTimes[1]] })
 plt.plot('x','Run Time for AES', data=dfsAT, linestyle='-', marker='o',color='#1E12FF')
 plt.plot('x','Run Time for Mod-RSA',data=dfsMT, linestyle='-',marker='o',color='#01FF34')
 

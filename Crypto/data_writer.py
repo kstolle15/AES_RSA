@@ -14,11 +14,11 @@ import random
 
 alphabet = list(string.ascii_lowercase)
 
-def writeFirstTen():
+def writeOneThousand():
     phrases = []
-    phrases = getPhrases(10,phrases)
+    phrases = getPhrases(1000,phrases)
     try:
-        f = open("../Data/ten.txt", "w")
+        f = open("../Data/oneThousand.txt", "w")
         for i in phrases:
             f.write(i)
             f.write("\n")
