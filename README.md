@@ -9,3 +9,10 @@ Cryptography application for comparing runtimes of RSA and AES algorithms
 2. matplotlib and pandas - these imports will be used to graph the data
     - to install matplotlip run pip install matplotlib
     - to install pandas run pip install pandas
+
+## Running the Program 
+Everything is set up so that you just have to run the command: python3 driver.py 
+(Note: This Program will run for a few minutes due to the number of tests ran)
+
+There are two main tests. After each one has completed, a series of graphs should pop up displaying 
+the recorded information.
